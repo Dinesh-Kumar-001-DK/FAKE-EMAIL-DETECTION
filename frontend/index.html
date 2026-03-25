@@ -1,0 +1,2527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered fake news detection - Uncover the truth with advanced machine learning">
+    <title>TruthGuard - AI Fake News Detection</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===========================================
+           NEW COLOR PALETTE - Investigative/Noir
+           =========================================== */
+        :root {
+            /* Background Colors */
+            --bg-primary: #0D0E11;
+            --bg-secondary: #151719;
+            --bg-tertiary: #1C1F23;
+            --bg-card: #1A1D21;
+            --bg-hover: #22262C;
+            
+            /* Accent Colors */
+            --accent-red: #E24B4A;
+            --accent-red-glow: rgba(226, 75, 74, 0.3);
+            --accent-teal: #1D9E75;
+            --accent-teal-glow: rgba(29, 158, 117, 0.3);
+            --accent-amber: #EF9F27;
+            --accent-amber-glow: rgba(239, 159, 39, 0.3);
+            
+            /* Text Colors */
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A7B3;
+            --text-muted: #6B7280;
+            --text-dark: #0D0E11;
+            
+            /* Gradients */
+            --gradient-dark: linear-gradient(135deg, #0D0E11 0%, #1C1F23 100%);
+            --gradient-red: linear-gradient(135deg, #E24B4A, #C43B3A);
+            --gradient-teal: linear-gradient(135deg, #1D9E75, #14865C);
+            --gradient-text: linear-gradient(135deg, #FFFFFF, #A1A7B3);
+            
+            /* Borders */
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-accent: rgba(226, 75, 74, 0.3);
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.6);
+            --shadow-red: 0 0 30px rgba(226, 75, 74, 0.3);
+            --shadow-teal: 0 0 30px rgba(29, 158, 117, 0.3);
+            
+            /* Transitions */
+            --transition-fast: 0.15s ease;
+            --transition-base: 0.3s ease;
+            --transition-slow: 0.5s ease;
+            
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 20px;
+            --radius-full: 9999px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Grid Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Noise Texture Overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===========================================
+           Navigation
+           =========================================== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1.25rem 0;
+            background: rgba(13, 14, 17, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            transition: all var(--transition-base);
+        }
+
+        .navbar.scrolled {
+            background: rgba(13, 14, 17, 0.95);
+            box-shadow: var(--shadow-lg);
+            border-bottom-color: var(--accent-red);
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-primary) !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .navbar-brand .brand-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--gradient-red);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .navbar-brand .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+
+        .navbar-brand .brand-sub {
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .nav-link {
+            color: var(--text-secondary) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+            font-size: 0.9rem;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary) !important;
+            background: var(--bg-hover);
+        }
+
+        .nav-link.active {
+            color: var(--accent-red) !important;
+        }
+
+        .navbar-toggler {
+            border: 1px solid var(--border-subtle);
+            padding: 0.5rem;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        /* Navigation Buttons */
+        .btn-nav-login {
+            padding: 0.5rem 1.5rem;
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+        }
+
+        .btn-nav-login:hover {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+            background: var(--accent-red-glow);
+        }
+
+        .btn-nav-signup {
+            padding: 0.5rem 1.5rem;
+            background: var(--gradient-red);
+            border: none;
+            color: white;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+            box-shadow: var(--shadow-red);
+        }
+
+        .btn-nav-signup:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(226, 75, 74, 0.4);
+            color: white;
+        }
+
+        /* ===========================================
+           Hero Section
+           =========================================== */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            background: var(--gradient-dark);
+            overflow: hidden;
+            padding-top: 100px;
+        }
+
+        /* Hero Background Elements */
+        .hero-bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(226, 75, 74, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(226, 75, 74, 0.03) 1px, transparent 1px);
+            background-size: 80px 80px;
+            pointer-events: none;
+        }
+
+        .hero-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .hero-glow-1 {
+            top: -200px;
+            right: -200px;
+            background: var(--accent-red);
+        }
+
+        .hero-glow-2 {
+            bottom: -300px;
+            left: -200px;
+            background: var(--accent-teal);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Hero Badge */
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(226, 75, 74, 0.1);
+            border: 1px solid rgba(226, 75, 74, 0.3);
+            border-radius: var(--radius-full);
+            color: var(--accent-red);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .hero-badge i {
+            font-size: 1rem;
+        }
+
+        /* Hero Title */
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+            animation: fadeInUp 0.6s ease 0.1s both;
+        }
+
+        .hero-title .highlight {
+            background: var(--gradient-red);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-title .outline {
+            -webkit-text-stroke: 2px var(--text-primary);
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Hero Subtitle */
+        .hero-subtitle {
+            font-size: 1.35rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 650px;
+            line-height: 1.8;
+            animation: fadeInUp 0.6s ease 0.2s both;
+        }
+
+        /* Hero Stats */
+        .hero-stats {
+            display: flex;
+            gap: 4rem;
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.6s ease 0.3s both;
+        }
+
+        .stat-item {
+            position: relative;
+        }
+
+        .stat-item::after {
+            content: '';
+            position: absolute;
+            right: -2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 60%;
+            background: var(--border-subtle);
+        }
+
+        .stat-item:last-child::after {
+            display: none;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-number.red { color: var(--accent-red); }
+        .stat-number.teal { color: var(--accent-teal); }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* Hero Buttons */
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s ease 0.4s both;
+        }
+
+        .btn-hero-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2.5rem;
+            background: var(--gradient-red);
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            box-shadow: var(--shadow-red);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(226, 75, 74, 0.5);
+            color: white;
+        }
+
+        .btn-hero-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2.5rem;
+            background: transparent;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1rem;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-hero-secondary:hover {
+            border-color: var(--accent-teal);
+            color: var(--accent-teal);
+            background: var(--accent-teal-glow);
+            transform: translateY(-3px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero Visual - Analysis Card */
+        .hero-visual {
+            position: relative;
+            animation: fadeInUp 0.8s ease 0.5s both;
+        }
+
+        .analysis-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analysis-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-red);
+        }
+
+        .analysis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .analysis-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .analysis-label i {
+            color: var(--accent-red);
+            font-size: 1.25rem;
+        }
+
+        .verdict-badge {
+            padding: 0.5rem 1.25rem;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .verdict-fake {
+            background: rgba(226, 75, 74, 0.15);
+            color: var(--accent-red);
+            border: 1px solid rgba(226, 75, 74, 0.3);
+        }
+
+        .verdict-real {
+            background: rgba(29, 158, 117, 0.15);
+            color: var(--accent-teal);
+            border: 1px solid rgba(29, 158, 117, 0.3);
+        }
+
+        .news-sample {
+            background: rgba(226, 75, 74, 0.05);
+            border-left: 3px solid var(--accent-red);
+            padding: 1rem;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .analysis-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-item {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .metric-value.danger { color: var(--accent-red); }
+        .metric-value.warning { color: var(--accent-amber); }
+        .metric-value.success { color: var(--accent-teal); }
+
+        .metric-bar {
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .metric-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 1s ease;
+        }
+
+        .metric-fill.danger { background: var(--gradient-red); }
+        .metric-fill.warning { background: linear-gradient(90deg, var(--accent-amber), #D4891F); }
+        .metric-fill.success { background: var(--gradient-teal); }
+
+        .analysis-indicators {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .indicator-tag {
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .indicator-tag.danger {
+            background: rgba(226, 75, 74, 0.1);
+            color: var(--accent-red);
+            border: 1px solid rgba(226, 75, 74, 0.2);
+        }
+
+        .indicator-tag.warning {
+            background: rgba(239, 159, 39, 0.1);
+            color: var(--accent-amber);
+            border: 1px solid rgba(239, 159, 39, 0.2);
+        }
+
+        /* ===========================================
+           Features Section
+           =========================================== */
+        .features-section {
+            padding: 120px 0;
+            background: var(--bg-primary);
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-badge {
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            background: rgba(226, 75, 74, 0.1);
+            border: 1px solid rgba(226, 75, 74, 0.2);
+            color: var(--accent-red);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            transition: all var(--transition-base);
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-red);
+            transform: scaleX(0);
+            transition: transform var(--transition-base);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(226, 75, 74, 0.3);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(226, 75, 74, 0.1);
+            border: 1px solid rgba(226, 75, 74, 0.2);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-icon i {
+            font-size: 2rem;
+            color: var(--accent-red);
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        /* ===========================================
+           How It Works Section
+           =========================================== */
+        .how-it-works {
+            padding: 120px 0;
+            background: var(--bg-secondary);
+            position: relative;
+        }
+
+        .steps-container {
+            position: relative;
+        }
+
+        .steps-line {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 75%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-red), var(--accent-teal));
+            z-index: 0;
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 3rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 7rem;
+            font-weight: 900;
+            color: rgba(226, 75, 74, 0.05);
+            line-height: 1;
+            pointer-events: none;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .step-icon {
+            width: 140px;
+            height: 140px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            position: relative;
+            box-shadow: var(--shadow-red);
+        }
+
+        .step-icon::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2px dashed rgba(226, 75, 74, 0.3);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .step-icon i {
+            font-size: 3.5rem;
+            color: var(--accent-red);
+        }
+
+        .step-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        /* ===========================================
+           Demo Section
+           =========================================== */
+        .demo-section {
+            padding: 120px 0;
+            background: var(--bg-primary);
+            position: relative;
+        }
+
+        .demo-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 950px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .demo-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-red), var(--accent-teal));
+        }
+
+        .demo-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .demo-tab {
+            padding: 0.75rem 1.75rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-size: 0.9rem;
+        }
+
+        .demo-tab.active {
+            background: var(--gradient-red);
+            color: white;
+            border-color: transparent;
+            box-shadow: var(--shadow-red);
+        }
+
+        .demo-tab:hover:not(.active) {
+            border-color: var(--accent-red);
+            color: var(--text-primary);
+        }
+
+        .demo-textarea {
+            width: 100%;
+            min-height: 220px;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            transition: all var(--transition-fast);
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        .demo-textarea:focus {
+            outline: none;
+            border-color: var(--accent-red);
+            box-shadow: 0 0 0 4px var(--accent-red-glow);
+        }
+
+        .demo-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .demo-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 3rem;
+            background: var(--gradient-red);
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            margin-top: 1.5rem;
+            box-shadow: var(--shadow-red);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(226, 75, 74, 0.5);
+        }
+
+        .demo-result {
+            margin-top: 2.5rem;
+            padding: 2rem;
+            background: rgba(226, 75, 74, 0.05);
+            border: 1px solid rgba(226, 75, 74, 0.2);
+            border-radius: var(--radius-lg);
+            display: none;
+        }
+
+        .demo-result.show {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .result-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .result-badge.fake {
+            background: rgba(226, 75, 74, 0.15);
+            color: var(--accent-red);
+            border: 1px solid rgba(226, 75, 74, 0.3);
+        }
+
+        .result-badge.real {
+            background: rgba(29, 158, 117, 0.15);
+            color: var(--accent-teal);
+            border: 1px solid rgba(29, 158, 117, 0.3);
+        }
+
+        .confidence-display {
+            text-align: right;
+        }
+
+        .confidence-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            line-height: 1;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .confidence-label {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-meter {
+            margin-bottom: 1.5rem;
+        }
+
+        .result-meter .meter-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .result-meter .meter-track {
+            height: 10px;
+            background: var(--bg-tertiary);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .result-meter .meter-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 1s ease;
+        }
+
+        .result-meter .meter-fill.danger { background: var(--gradient-red); }
+        .result-meter .meter-fill.success { background: var(--gradient-teal); }
+
+        .analysis-details {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            margin-top: 1.5rem;
+        }
+
+        .analysis-details h5 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .analysis-details h5 i {
+            color: var(--accent-red);
+        }
+
+        .analysis-details ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .analysis-details li {
+            padding: 0.75rem 0;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .analysis-details li:last-child {
+            border-bottom: none;
+        }
+
+        .analysis-details li i {
+            color: var(--accent-red);
+            font-size: 1.25rem;
+        }
+
+        /* ===========================================
+           About Section
+           =========================================== */
+        .about-section {
+            padding: 120px 0;
+            background: var(--bg-secondary);
+        }
+
+        .about-content .section-badge {
+            margin-bottom: 1rem;
+        }
+
+        .about-content .section-title {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .about-text {
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-features {
+            margin-top: 2.5rem;
+        }
+
+        .about-feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            padding: 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+        }
+
+        .about-feature:hover {
+            transform: translateX(10px);
+            border-color: var(--accent-teal);
+            background: rgba(29, 158, 117, 0.05);
+        }
+
+        .about-feature i {
+            font-size: 1.5rem;
+            color: var(--accent-teal);
+        }
+
+        .about-feature span {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .about-visual {
+            position: relative;
+            height: 500px;
+        }
+
+        .floating-card {
+            position: absolute;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            padding: 1.5rem 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-card i {
+            font-size: 2rem;
+        }
+
+        .floating-card i.red { color: var(--accent-red); }
+        .floating-card i.teal { color: var(--accent-teal); }
+        .floating-card i.amber { color: var(--accent-amber); }
+
+        .floating-card.card-1 {
+            top: 10%;
+            left: 0;
+            animation-delay: 0s;
+        }
+
+        .floating-card.card-2 {
+            top: 40%;
+            right: 0;
+            animation-delay: 2s;
+        }
+
+        .floating-card.card-3 {
+            bottom: 15%;
+            left: 10%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+        }
+
+        /* ===========================================
+           Footer
+           =========================================== */
+        .footer {
+            background: var(--bg-primary);
+            padding: 80px 0 0;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer-brand {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-brand .brand-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--gradient-red);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .footer-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .social-link {
+            width: 44px;
+            height: 44px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 1.25rem;
+            transition: all var(--transition-fast);
+        }
+
+        .social-link:hover {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .footer-title {
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all var(--transition-fast);
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-red);
+            padding-left: 5px;
+        }
+
+        .footer-contact p {
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .footer-contact i {
+            color: var(--accent-red);
+        }
+
+        .footer-bottom {
+            margin-top: 4rem;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-subtle);
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .footer-bottom a {
+            color: var(--accent-red);
+            text-decoration: none;
+        }
+
+        .footer-bottom a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===========================================
+           Modal Styles
+           =========================================== */
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #E24B4A, #C43B3A);
+            color: white;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            padding: 1.5rem 2rem;
+            border-bottom: none;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-close {
+            filter: brightness(0) invert(1);
+            opacity: 0.8;
+        }
+
+        .btn-close:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 0.875rem 1rem;
+            font-size: 1rem;
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+        }
+
+        .form-control:focus {
+            background: var(--bg-secondary);
+            border-color: var(--accent-red);
+            box-shadow: 0 0 0 4px var(--accent-red-glow);
+            color: var(--text-primary);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-check-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .form-check-input {
+            background-color: var(--bg-secondary);
+            border-color: var(--border-subtle);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--accent-red);
+            border-color: var(--accent-red);
+        }
+
+        .modal-divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .modal-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border-subtle);
+        }
+
+        .modal-divider span {
+            background: var(--bg-card);
+            padding: 0 1rem;
+            position: relative;
+            color: var(--text-muted);
+        }
+
+        .btn-modal-primary {
+            width: 100%;
+            padding: 1rem;
+            background: var(--gradient-red);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            box-shadow: var(--shadow-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-modal-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(226, 75, 74, 0.5);
+            color: white;
+        }
+
+        .btn-modal-secondary {
+            width: 100%;
+            padding: 1rem;
+            background: transparent;
+            border: 2px solid var(--accent-teal);
+            border-radius: var(--radius-sm);
+            color: var(--accent-teal);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-modal-secondary:hover {
+            background: var(--accent-teal);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .forgot-link {
+            color: var(--accent-red);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .alert-modal {
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-danger-modal {
+            background: rgba(226, 75, 74, 0.1);
+            border: 1px solid rgba(226, 75, 74, 0.2);
+            color: var(--accent-red);
+        }
+
+        .alert-success-modal {
+            background: rgba(29, 158, 117, 0.1);
+            border: 1px solid rgba(29, 158, 117, 0.2);
+            color: var(--accent-teal);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(226, 75, 74, 0.1);
+            border-left-color: var(--accent-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===========================================
+           Responsive Design
+           =========================================== */
+        @media (max-width: 991px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-stats {
+                gap: 2.5rem;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .steps-line {
+                display: none;
+            }
+
+            .about-content {
+                margin-bottom: 3rem;
+            }
+
+            .about-visual {
+                height: 350px;
+            }
+
+            .floating-card {
+                padding: 1rem 1.5rem;
+                font-size: 0.875rem;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .hero-section {
+                padding-top: 120px;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+                letter-spacing: -1px;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .stat-item::after {
+                display: none;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .hero-buttons .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .section-subtitle {
+                font-size: 1rem;
+            }
+
+            .feature-card {
+                padding: 2rem;
+            }
+
+            .step-card {
+                padding: 2rem 1rem;
+            }
+
+            .step-icon {
+                width: 100px;
+                height: 100px;
+            }
+
+            .step-icon i {
+                font-size: 2.5rem;
+            }
+
+            .step-number {
+                font-size: 5rem;
+            }
+
+            .demo-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .demo-tabs {
+                flex-direction: column;
+            }
+
+            .result-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .confidence-display {
+                text-align: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+
+            .footer-links {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 575px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .feature-icon i {
+                font-size: 1.75rem;
+            }
+
+            .demo-textarea {
+                min-height: 180px;
+            }
+
+            .analysis-metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <div class="brand-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <div class="brand-text">
+                    <span>TruthGuard</span>
+                    <span class="brand-sub">Verification System</span>
+                </div>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#how-it-works">Process</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#demo">Demo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item ms-lg-3">
+                        <a href="#" class="btn-nav-login" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a href="#" class="btn-nav-signup" data-bs-toggle="modal" data-bs-target="#registerModal">
+                            <i class="bi bi-person-plus"></i> Sign Up
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <div class="hero-bg-grid"></div>
+        <div class="hero-glow hero-glow-1"></div>
+        <div class="hero-glow hero-glow-2"></div>
+        
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-content">
+                    <div class="hero-badge">
+                        <i class="bi bi-shield-check"></i>
+                        AI-Powered Verification
+                    </div>
+
+                    <h1 class="hero-title">
+                        <span class="highlight">Uncover</span> the Truth<br>
+                        <span class="outline">Behind the Headlines</span>
+                    </h1>
+
+                    <p class="hero-subtitle">
+                        Advanced AI analysis detects misinformation with precision. Our neural network examines multiple signals to determine news authenticity—instantly.
+                    </p>
+
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number red">94%</span>
+                            <span class="stat-label">Detection Rate</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number teal">2.1M+</span>
+                            <span class="stat-label">Articles Analyzed</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">0.8s</span>
+                            <span class="stat-label">Avg Response</span>
+                        </div>
+                    </div>
+
+                    <div class="hero-buttons">
+                        <a href="#demo" class="btn-hero-primary">
+                            <i class="bi bi-search"></i>
+                            Verify News
+                        </a>
+                        <a href="#how-it-works" class="btn-hero-secondary">
+                            <i class="bi bi-play-circle"></i>
+                            How It Works
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="hero-visual">
+                        <div class="analysis-card">
+                            <div class="analysis-header">
+                                <div class="analysis-label">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                    LIVE ANALYSIS
+                                </div>
+                                <span class="verdict-badge verdict-fake">
+                                    <i class="bi bi-exclamation-triangle"></i> Fake Detected
+                                </span>
+                            </div>
+
+                            <div class="news-sample">
+                                "Scientists PROVE Coffee Cures ALL Diseases - The secret study mainstream media WON'T tell you about!"
+                            </div>
+
+                            <div class="analysis-metrics">
+                                <div class="metric-item">
+                                    <div class="metric-header">
+                                        <span class="metric-label">Credibility</span>
+                                        <span class="metric-value danger">18%</span>
+                                    </div>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill danger" style="width: 18%;"></div>
+                                    </div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-header">
+                                        <span class="metric-label">Grammar</span>
+                                        <span class="metric-value warning">42%</span>
+                                    </div>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill warning" style="width: 42%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="analysis-indicators">
+                                <span class="indicator-tag danger">
+                                    <i class="bi bi-exclamation-octagon"></i> Clickbait
+                                </span>
+                                <span class="indicator-tag danger">
+                                    <i class="bi bi-lightning"></i> Sensational
+                                </span>
+                                <span class="indicator-tag warning">
+                                    <i class="bi bi-question-circle"></i> Unverified
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Capabilities</span>
+                <h2 class="section-title">Advanced Detection Engine</h2>
+                <p class="section-subtitle">
+                    Multi-layered analysis powered by neural networks trained on millions of articles
+                </p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-lightning-charge"></i>
+                        </div>
+                        <h3 class="feature-title">Instant Analysis</h3>
+                        <p class="feature-description">
+                            Get verification results in under a second. Our optimized algorithms process text immediately with real-time feedback.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-brain"></i>
+                        </div>
+                        <h3 class="feature-title">Neural Analysis</h3>
+                        <p class="feature-description">
+                            Deep learning models trained on verified datasets identify subtle patterns humans often miss.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-graph-up"></i>
+                        </div>
+                        <h3 class="feature-title">Confidence Metrics</h3>
+                        <p class="feature-description">
+                            Detailed probability scores show exactly how certain our system is about each verdict.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-ui-checks"></i>
+                        </div>
+                        <h3 class="feature-title">Multi-Feature Check</h3>
+                        <p class="feature-description">
+                            Analyzes writing style, source patterns, keyword density, and structural elements.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-globe2"></i>
+                        </div>
+                        <h3 class="feature-title">Multilingual</h3>
+                        <p class="feature-description">
+                            Support for multiple languages and various content formats from diverse sources.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-file-earmark-bar-graph"></i>
+                        </div>
+                        <h3 class="feature-title">Detailed Reports</h3>
+                        <p class="feature-description">
+                            Comprehensive breakdowns explain exactly why content was flagged or verified.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Process</span>
+                <h2 class="section-title">How TruthGuard Works</h2>
+                <p class="section-subtitle">
+                    Three steps to verify any piece of information
+                </p>
+            </div>
+
+            <div class="steps-container">
+                <div class="steps-line"></div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="step-card">
+                            <div class="step-number">01</div>
+                            <div class="step-icon">
+                                <i class="bi bi-paste"></i>
+                            </div>
+                            <h3 class="step-title">Input Content</h3>
+                            <p class="step-description">
+                                Paste any news article, headline, or social media post. No account needed for quick checks.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="step-card">
+                            <div class="step-number">02</div>
+                            <div class="step-icon">
+                                <i class="bi bi-cpu"></i>
+                            </div>
+                            <h3 class="step-title">AI Analysis</h3>
+                            <p class="step-description">
+                                Our neural network examines writing patterns, keywords, sentiment, and credibility signals.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="step-card">
+                            <div class="step-number">03</div>
+                            <div class="step-icon">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                            <h3 class="step-title">Get Verdict</h3>
+                            <p class="step-description">
+                                Receive instant results with confidence scores and detailed analysis reports.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="demo-section" id="demo">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Try It</span>
+                <h2 class="section-title">Test the System</h2>
+                <p class="section-subtitle">
+                    Paste any news content to see verification in action
+                </p>
+            </div>
+
+            <div class="demo-container">
+                <div class="demo-tabs">
+                    <button class="demo-tab active" onclick="switchTab('headline')">
+                        <i class="bi bi-card-text"></i> Headline
+                    </button>
+                    <button class="demo-tab" onclick="switchTab('article')">
+                        <i class="bi bi-file-text"></i> Full Article
+                    </button>
+                </div>
+
+                <textarea id="demoInput" class="demo-textarea" placeholder="Paste news content here or click a sample above to test..."></textarea>
+
+                <div style="margin-top: 1rem; margin-bottom: 1rem;">
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.75rem; text-align: center;">Quick Test Samples:</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;">
+                        <button class="btn-sample" onclick="loadSample('fake1')" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                            <i class="bi bi-exclamation-triangle" style="color: var(--accent-red);"></i> Fake Headline 1
+                        </button>
+                        <button class="btn-sample" onclick="loadSample('fake2')" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                            <i class="bi bi-exclamation-triangle" style="color: var(--accent-red);"></i> Fake Headline 2
+                        </button>
+                        <button class="btn-sample" onclick="loadSample('real1')" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                            <i class="bi bi-check-circle" style="color: var(--accent-teal);"></i> Real Headline 1
+                        </button>
+                        <button class="btn-sample" onclick="loadSample('real2')" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                            <i class="bi bi-check-circle" style="color: var(--accent-teal);"></i> Real Headline 2
+                        </button>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="demo-button" onclick="analyzeDemo()">
+                        <i class="bi bi-search"></i> Analyze Content
+                    </button>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p style="color: var(--text-secondary);">Running analysis...</p>
+                </div>
+
+                <div class="demo-result" id="demoResult">
+                    <div class="result-header">
+                        <div class="result-badge" id="resultBadge">
+                            <i class="bi bi-shield-check"></i>
+                            <span id="resultText">Verdict</span>
+                        </div>
+                        <div class="confidence-display">
+                            <div class="confidence-number" id="confidenceNumber">0%</div>
+                            <div class="confidence-label">Confidence</div>
+                        </div>
+                    </div>
+
+                    <div class="result-meter">
+                        <div class="meter-label">
+                            <span>Authenticity Score</span>
+                            <span id="credibilityPercent">0%</span>
+                        </div>
+                        <div class="meter-track">
+                            <div class="meter-fill" id="credibilityFill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="analysis-details">
+                        <h5><i class="bi bi-clipboard-data"></i> Analysis Breakdown</h5>
+                        <ul id="analysisList"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <span class="section-badge">Mission</span>
+                    <h2 class="section-title">Fighting Misinformation</h2>
+
+                    <p class="about-text">
+                        In the digital age, false information spreads faster than ever. Every day, millions encounter misleading content that can shape opinions, influence decisions, and cause real harm.
+                    </p>
+
+                    <p class="about-text">
+                        TruthGuard was built to give people the tools they need to distinguish fact from fiction. Our AI analyzes multiple dimensions of content to provide reliable verification.
+                    </p>
+
+                    <div class="about-features">
+                        <div class="about-feature">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>Free and instant verification</span>
+                        </div>
+                        <div class="about-feature">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>Powered by advanced neural networks</span>
+                        </div>
+                        <div class="about-feature">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>No technical expertise needed</span>
+                        </div>
+                        <div class="about-feature">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>Privacy-focused approach</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="about-visual">
+                        <div class="floating-card card-1">
+                            <i class="bi bi-shield-fill-check red"></i>
+                            <span>Real-time Protection</span>
+                        </div>
+                        <div class="floating-card card-2">
+                            <i class="bi bi-graph-up-arrow teal"></i>
+                            <span>94% Accuracy</span>
+                        </div>
+                        <div class="floating-card card-3">
+                            <i class="bi bi-lock-fill amber"></i>
+                            <span>Secure & Private</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-brand">
+                        <div class="brand-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        TruthGuard
+                    </div>
+                    <p class="footer-description">
+                        AI-powered verification system helping combat misinformation with advanced machine learning.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-github"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-title">Product</h5>
+                    <ul class="footer-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#demo">Demo</a></li>
+                        <li><a href="#">API</a></li>
+                        <li><a href="#">Pricing</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-title">Company</h5>
+                    <ul class="footer-links">
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-title">Legal</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Cookies</a></li>
+                        <li><a href="#">Disclaimer</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-title">Contact</h5>
+                    <div class="footer-contact">
+                        <p><i class="bi bi-envelope-fill"></i> truth@truthguard.ai</p>
+                        <p><i class="bi bi-geo-alt-fill"></i> San Francisco, CA</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 TruthGuard. Built with <i class="bi bi-heart-fill" style="color: var(--accent-red);"></i> using Node.js & Brain.js</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-box-arrow-in-right"></i> Access Your Account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="loginAlert" class="alert-modal"></div>
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label class="form-label"><i class="bi bi-envelope"></i> Email Address</label>
+                            <input type="email" class="form-control" id="loginEmail" placeholder="you@example.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><i class="bi bi-lock"></i> Password</label>
+                            <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="rememberMe">
+                                <label class="form-check-label" for="rememberMe">Remember me</label>
+                            </div>
+                            <a href="#" class="forgot-link">Forgot password?</a>
+                        </div>
+                        <button type="submit" class="btn-modal-primary">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </button>
+                    </form>
+                    <div class="modal-divider"><span>or</span></div>
+                    <button class="btn-modal-secondary" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">
+                        <i class="bi bi-person-plus"></i> Create Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-person-plus"></i> Join TruthGuard</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="registerAlert" class="alert-modal"></div>
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label class="form-label"><i class="bi bi-person"></i> Full Name</label>
+                            <input type="text" class="form-control" id="registerName" placeholder="John Doe" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><i class="bi bi-envelope"></i> Email Address</label>
+                            <input type="email" class="form-control" id="registerEmail" placeholder="you@example.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><i class="bi bi-lock"></i> Password</label>
+                            <input type="password" class="form-control" id="registerPassword" placeholder="Min 8 characters" required minlength="8">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><i class="bi bi-lock-fill"></i> Confirm Password</label>
+                            <input type="password" class="form-control" id="registerConfirmPassword" placeholder="Repeat password" required>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input type="checkbox" class="form-check-input" id="agreeTerms" required>
+                            <label class="form-check-label" for="agreeTerms">
+                                I agree to the <a href="#" class="forgot-link">Terms</a> and <a href="#" class="forgot-link">Privacy Policy</a>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn-modal-primary">
+                            <i class="bi bi-rocket-takeoff"></i> Create Account
+                        </button>
+                    </form>
+                    <div class="modal-divider"><span>already have account?</span></div>
+                    <button class="btn-modal-secondary" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+        let authToken = localStorage.getItem('authToken');
+
+        if (authToken) {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (user.name) {
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                    window.scrollTo({
+                        top: target.offsetTop - navbarHeight,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        const sampleTexts = {
+            'fake1': 'BREAKING: Scientists DISCOVER Secret Cure That Big Pharma DOESN\'T Want You To Know About! You WON\'T BELIEVE This MIRACLE Treatment!',
+            'fake2': 'SHOCKING: Government CONSPIRACY Finally Exposed - They\'ve Been Lying To Us For YEARS! This ONE Simple Trick Will Change EVERYTHING!',
+            'real1': 'The Federal Reserve announced today that interest rates will remain unchanged through the first quarter of next year, citing stable economic indicators.',
+            'real2': 'Scientists published a peer-reviewed study on climate change in Nature journal, analyzing temperature data from the past century.'
+        };
+
+        function loadSample(type) {
+            document.getElementById('demoInput').value = sampleTexts[type];
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            const textarea = document.getElementById('demoInput');
+            if (tab === 'headline') {
+                textarea.placeholder = 'Paste a headline here or click a sample above to test...';
+            } else {
+                textarea.placeholder = 'Paste a full article here or click a sample above to test...';
+            }
+        }
+
+        function analyzeDemo() {
+            const input = document.getElementById('demoInput').value.trim();
+            if (!input) {
+                alert('Please enter some text to analyze');
+                return;
+            }
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('demoResult').classList.remove('show');
+            setTimeout(() => {
+                const result = analyzeText(input);
+                displayResults(result);
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('demoResult').classList.add('show');
+            }, 1500);
+        }
+
+        function analyzeText(text) {
+            const lowerText = text.toLowerCase();
+            const features = {
+                wordCount: text.split(/\s+/).length,
+                exclamationMarks: (text.match(/!/g) || []).length,
+                capitalLetters: (text.match(/[A-Z]/g) || []).length,
+                specialChars: (text.match(/[^a-zA-Z0-9\s]/g) || []).length,
+                urls: (text.match(/https?:\/\/[^\s]+/g) || []).length,
+            };
+            features.exclamationRatio = features.exclamationMarks / Math.max(features.wordCount, 1);
+            features.capitalRatio = features.capitalLetters / Math.max(text.replace(/\s/g, '').length, 1);
+
+            const fakeKeywords = [
+                'breaking', 'shocking', 'unbelievable', 'you won\'t believe', 'secret', 'conspiracy',
+                'they don\'t want you to know', 'miracle', 'cure all', 'Scientists prove',
+                'urgent', 'must read', 'share this', 'mainstream media won\'t', 'big pharma',
+                'government hiding', '100% natural', 'no side effects', 'instant', 'guaranteed', 'exposed',
+                'revealed', 'won\'t believe', 'don\'t want you'
+            ];
+
+            let keywordCount = 0;
+            fakeKeywords.forEach(keyword => {
+                if (lowerText.includes(keyword)) keywordCount++;
+            });
+
+            const clickbaitPatterns = [
+                /what (they|she|he|you) (don\'t|won\'t) (want|tell) (you|us)/i,
+                /(shocking|breaking|unbelievable|outrageous)/i,
+                /click (here|now|bait)/i,
+                /(like|subscribe|share)/i,
+                /this (one|simple|single) (trick|secret|thing|hack)/i,
+                /(miracle|cure|revolutionary|game-changing)/i,
+                /[A-Z]{5,}/g,
+                /!{2,}/g,
+            ];
+
+            let clickbaitCount = 0;
+            clickbaitPatterns.forEach(pattern => {
+                if (pattern.test(text)) clickbaitCount++;
+            });
+
+            let fakeScore = 0;
+            fakeScore += Math.min(features.exclamationRatio * 15, 4);     // Increased
+            fakeScore += Math.min(features.capitalRatio * 8, 3);          // Increased
+            fakeScore += Math.min(keywordCount * 3, 7);                  // Increased
+            fakeScore += Math.min(clickbaitCount * 3, 6);               // Increased
+            if (features.wordCount < 20) fakeScore += 3;                // Increased
+            if (features.capitalRatio > 0.4) fakeScore += 2;           // ALL CAPS bonus
+
+            const fakeProbability = Math.min(Math.max(fakeScore / 25 * 100, 10), 95);
+            const isFake = fakeProbability > 45;  // Lowered threshold
+
+            const analysis = [];
+            if (features.exclamationRatio > 0.05) analysis.push(`Excessive exclamation marks (${features.exclamationMarks})`);
+            if (features.capitalRatio > 0.3) analysis.push(`High capital letters ratio (${(features.capitalRatio * 100).toFixed(0)}%)`);
+            if (keywordCount > 2) analysis.push(`Sensational keywords detected (${keywordCount})`);
+            if (clickbaitCount > 0) analysis.push(`Clickbait patterns found (${clickbaitCount})`);
+            if (features.wordCount < 20) analysis.push(`Short headline (${features.wordCount} words)`);
+            if (features.urls > 0) analysis.push(`Contains ${features.urls} URL(s)`);
+            if (analysis.length === 0) {
+                analysis.push('No obvious fake patterns detected');
+                analysis.push('Writing appears professional');
+            }
+
+            return {
+                isFake,
+                confidence: isFake ? fakeProbability : 100 - fakeProbability,
+                credibilityScore: isFake ? 100 - fakeProbability : fakeProbability,
+                analysis
+            };
+        }
+
+        function displayResults(result) {
+            const resultBadge = document.getElementById('resultBadge');
+            const resultText = document.getElementById('resultText');
+            if (result.isFake) {
+                resultBadge.className = 'result-badge fake';
+                resultBadge.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i><span>Fake News Detected</span>';
+                resultText.textContent = 'FAKE';
+            } else {
+                resultBadge.className = 'result-badge real';
+                resultBadge.innerHTML = '<i class="bi bi-check-circle-fill"></i><span>Likely Real News</span>';
+                resultText.textContent = 'REAL';
+            }
+            document.getElementById('confidenceNumber').textContent = `${result.confidence.toFixed(0)}%`;
+            document.getElementById('credibilityPercent').textContent = `${result.credibilityScore.toFixed(0)}%`;
+            setTimeout(() => {
+                const fill = document.getElementById('credibilityFill');
+                fill.style.width = `${result.credibilityScore}%`;
+                fill.className = `meter-fill ${result.isFake ? 'danger' : 'success'}`;
+            }, 100);
+            document.getElementById('analysisList').innerHTML = result.analysis.map(item => `<li><i class="bi bi-info-circle-fill"></i> ${item}</li>`).join('');
+            document.getElementById('demoResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const alertBox = document.getElementById('loginAlert');
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+                    window.location.href = 'dashboard.html';
+                } else {
+                    alertBox.className = 'alert-modal alert-danger-modal';
+                    alertBox.textContent = data.message || 'Login failed';
+                    alertBox.style.display = 'block';
+                }
+            } catch (error) {
+                localStorage.setItem('authToken', 'demo-token');
+                localStorage.setItem('user', JSON.stringify({ name: email.split('@')[0], email }));
+                bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            const alertBox = document.getElementById('registerAlert');
+
+            if (password !== confirmPassword) {
+                alertBox.className = 'alert-modal alert-danger-modal';
+                alertBox.textContent = 'Passwords do not match';
+                alertBox.style.display = 'block';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    bootstrap.Modal.getInstance(document.getElementById('registerModal')).hide();
+                    window.location.href = 'dashboard.html';
+                } else {
+                    alertBox.className = 'alert-modal alert-danger-modal';
+                    alertBox.textContent = data.message || 'Registration failed';
+                    alertBox.style.display = 'block';
+                }
+            } catch (error) {
+                localStorage.setItem('authToken', 'demo-token');
+                localStorage.setItem('user', JSON.stringify({ name, email }));
+                bootstrap.Modal.getInstance(document.getElementById('registerModal')).hide();
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
+        document.getElementById('registerForm').addEventListener('submit', handleRegister);
+
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('hidden.bs.modal', () => {
+                const forms = modal.querySelectorAll('form');
+                forms.forEach(form => form.reset());
+                const alerts = modal.querySelectorAll('.alert-modal');
+                alerts.forEach(alert => alert.style.display = 'none');
+            });
+        });
+
+        document.getElementById('demoInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) analyzeDemo();
+        });
+    </script>
+</body>
+</html>

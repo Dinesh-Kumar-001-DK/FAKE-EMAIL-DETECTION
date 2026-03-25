@@ -1,0 +1,170 @@
+# ==========================================
+# TruthGuard - .gitignore
+# ==========================================
+
+# ==========================================
+# NODE MODULES
+# ==========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ==========================================
+# ENVIRONMENT FILES
+# ==========================================
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# ==========================================
+# SECRETS & KEYS
+# ==========================================
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+credentials.json
+secrets.json
+
+# ==========================================
+# DATABASE FILES
+# ==========================================
+*.db
+*.sqlite
+*.sqlite3
+data/*.json
+
+# ==========================================
+# LOG FILES
+# ==========================================
+logs/
+*.log
+logs.txt
+error.log
+access.log
+
+# ==========================================
+# TEMPORARY FILES
+# ==========================================
+tmp/
+temp/
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================================
+# IDE & EDITOR FILES
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# Eclipse
+.metadata/
+bin/
+
+# IntelliJ IDEA
+*.iml
+out/
+
+# Visual Studio Code
+.vscode/
+
+# ==========================================
+# OS FILES
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Windows
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+
+# ==========================================
+# BUILD OUTPUT
+# ==========================================
+dist/
+build/
+*.min.js
+*.min.css
+
+# ==========================================
+# TEST COVERAGE
+# ==========================================
+coverage/
+.nyc_output/
+*.lcov
+
+# ==========================================
+# BACKUP FILES
+# ==========================================
+*.bak
+*.backup
+*.old
+backup/
+backups/
+
+# ==========================================
+# GITHUB (if using GitHub Actions)
+# ==========================================
+.github/
+*.yml
+*.yaml
+!.github/workflows/
+
+# ==========================================
+# MONGO DATA (local)
+# ==========================================
+mongodb/
+mongo-data/
+data/db/
+
+# ==========================================
+# SSL CERTIFICATES (local dev)
+# ==========================================
+ssl/
+certs/
+localhost-key.pem
+localhost.pem
+
+# ==========================================
+# IMAGES & MEDIA (generated)
+# ==========================================
+public/uploads/*
+!public/uploads/.gitkeep
+
+# ==========================================
+# PRODUCTION FILES
+# ==========================================
+*.production
+production/
+.pm2/
+ecosystem.config.js
+
+# ==========================================
+# EXAMPLES (uncomment if needed)
+# ==========================================
+# example.env
+# .env.example

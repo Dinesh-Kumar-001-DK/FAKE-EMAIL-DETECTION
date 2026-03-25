@@ -1,0 +1,6 @@
+# ==========================================
+# TruthGuard Project - Root .gitignore
+# ==========================================
+
+# Node modules for all directories
+**/node_modules/

@@ -1,0 +1,114 @@
+# TruthGuard - Requirements
+
+## Node.js Dependencies
+
+```
+# Core Server
+express@^4.18.2
+mongoose@^8.0.0
+dotenv@^16.3.1
+
+# Machine Learning
+brain.js@^2.0.0-beta.2
+
+# Authentication
+jsonwebtoken@^9.0.2
+bcryptjs@^2.4.3
+
+# Utilities
+cors@^2.8.5
+body-parser@^1.20.2
+
+# Development (optional)
+nodemon@^3.0.2
+```
+
+---
+
+## System Requirements
+
+### Minimum Requirements
+
+| Component | Version | Required |
+|-----------|--------|----------|
+| Node.js | v14.0.0+ | Yes |
+| npm | v6.0.0+ | Yes |
+| MongoDB | v4.4+ | No (runs in demo mode) |
+
+### Recommended Requirements
+
+| Component | Version | Recommended |
+|-----------|--------|------------|
+| Node.js | v18.x LTS | Yes |
+| npm | v9.x+ | Yes |
+| MongoDB | v6.x | Yes |
+| RAM | 4GB+ | Yes |
+| Storage | 500MB+ | Yes |
+
+---
+
+## Installation Commands
+
+```bash
+# Install all dependencies
+npm install
+
+# Install specific packages
+npm install express mongoose brain.js
+
+# Development mode (with auto-reload)
+npm install --save-dev nodemon
+```
+
+---
+
+## Environment Variables
+
+Create a `.env` file with these variables:
+
+```env
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/fakeguard
+JWT_SECRET=your-secret-key-here
+```
+
+---
+
+## Optional Software
+
+### For Development
+
+- **VS Code** - Recommended code editor
+- **Postman** - API testing
+- **MongoDB Compass** - GUI for MongoDB
+
+### For Production
+
+- **PM2** - Process manager
+- **Nginx** - Reverse proxy
+- **Let's Encrypt** - SSL certificates
+
+---
+
+## Quick Install Script
+
+Run this one-liner to install everything:
+
+```bash
+npm install express mongoose brain.js dotenv jsonwebtoken bcryptjs cors body-parser
+```
+
+---
+
+## Package Versions (Last Updated: 2024)
+
+| Package | Version | Purpose |
+|---------|--------|---------|
+| express | 4.18.2 | Web framework |
+| mongoose | 8.0.0 | MongoDB ODM |
+| brain.js | 2.0.0-beta.2 | Neural network |
+| jsonwebtoken | 9.0.2 | JWT auth |
+| bcryptjs | 2.4.3 | Password hashing |
+| dotenv | 16.3.1 | Environment config |
+| cors | 2.8.5 | Cross-origin requests |
+| body-parser | 1.20.2 | JSON parsing |
