@@ -286,7 +286,9 @@ function predict(text) {
   
   // Threshold: >0.5 means fake
   const isFake = normalizedScore > 0.5;
-  const confidence = Math.abs(normalizedScore - 0.5) * 200;
+  // Better confidence calculation
+  const distanceFromThreshold = Math.abs(normalizedScore - 0.5);
+  const confidence = Math.min(Math.max(distanceFromThreshold * 200, 50), 95);
   
   // Generate analysis
   const analysis = generateAnalysis(text, features);
@@ -294,7 +296,7 @@ function predict(text) {
   return {
     isFake,
     confidence: Math.round(confidence),
-    credibilityScore: isFake ? 100 - Math.round(confidence) : Math.round(confidence),
+    credibilityScore: isFake ? Math.round(100 - confidence) : Math.round(confidence + 20),
     analysis,
     probability: normalizedScore
   };

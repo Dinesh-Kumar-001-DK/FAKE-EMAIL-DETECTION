@@ -1,292 +1,176 @@
-# FakeGuard - AI Fake News Detection System
+# TruthGuard - Fake News Detection System
 
-A modern, full-stack fake news detection system built with Node.js, Express, MongoDB, and Brain.js neural network.
+A beautiful, AI-powered fake news detection system built with Node.js, brain.js, and MongoDB.
 
-![FakeGuard](https://img.shields.io/badge/AI-Powered-6366f1?style=for-the-badge)
-![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge)
-![MongoDB](https://img.shields.io/badge/MongoDB-Connected-47A248?style=for-the-badge)
+![TruthGuard Banner](https://img.shields.io/badge/TruthGuard-Fake%20News%20Detector-blue?style=for-the-badge)
+![Node.js](https://img.shields.io/badge/Node.js-v18+-green?style=for-the-badge)
+![MongoDB](https://img.shields.io/badge/MongoDB-v6.0-green?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
-## 🚀 Features
+---
 
-- 🧠 **AI-Powered Detection** - Brain.js neural network with 90%+ accuracy
-- ⚡ **Real-Time Analysis** - Instant fake news detection
-- 🔐 **User Authentication** - JWT-based secure login/register
-- 📊 **Prediction History** - Track all your analyses
-- 🎨 **Modern UI** - Beautiful dark theme with animations
-- 📱 **Responsive Design** - Works on all devices
-- 🌐 **REST API** - Complete backend API
-- 💾 **MongoDB** - Persistent data storage
+## Features
 
-## 🛠️ Tech Stack
+- **AI-Powered Detection** - Uses brain.js neural network for accurate fake news detection
+- **Beautiful UI** - Dark/noir theme with modern design
+- **User Authentication** - Secure login/register with JWT tokens
+- **Dashboard** - Track history, statistics, and analysis
+- **Real-time Analysis** - Instant fake news detection
+- **MongoDB Integration** - Store users and prediction history
+- **Responsive Design** - Works on desktop and mobile
 
-**Frontend:**
-- HTML5, CSS3, JavaScript
-- Bootstrap 5
-- Bootstrap Icons
-- Google Fonts (Inter)
+---
 
-**Backend:**
-- Node.js
-- Express.js
-- MongoDB + Mongoose
-- Brain.js (Neural Network)
-- JWT Authentication
-- bcryptjs
-
-## 📦 Installation
+## Quick Start
 
 ### Prerequisites
-- Node.js 18+
-- MongoDB (local or Atlas)
-- npm or yarn
 
-### Quick Start
+- Node.js v14+
+- MongoDB v4.4+ (optional - runs in demo mode)
 
-1. **Clone/Download the project**
+### Installation
 
-2. **Install Backend Dependencies**
 ```bash
-cd fake-news-detector/backend
+# Clone the repository
+git clone https://github.com/Dinesh-Kumar-001-DK/goutham_client.git
+cd goutham_client
+
+# Install backend dependencies
+cd backend
 npm install
+
+# Start the server
+node server.js
+
+# Open browser
+# http://localhost:3000
 ```
 
-3. **Start MongoDB** (if local)
-```bash
-mongod
-```
+---
 
-4. **Start Server**
-```bash
-npm start
-# Server runs at http://localhost:3000
-```
-
-5. **Open Frontend**
-```
-Navigate to: http://localhost:3000
-```
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 fake-news-detector/
 ├── frontend/
-│   ├── index.html       # Landing page with login/register
-│   ├── dashboard.html   # User dashboard for analysis
-│   ├── style.css        # Custom styles (dark theme)
-│   └── app.js           # Frontend JavaScript
-│
+│   ├── index.html          # Landing page
+│   ├── dashboard.html      # Main dashboard
+│   ├── test.html          # Quick test page
+│   ├── style.css          # Styles
+│   └── app.js             # JavaScript
 ├── backend/
-│   ├── server.js        # Express server + API routes
-│   ├── model.js         # Brain.js ML model
-│   ├── data.json        # Training dataset (100 samples)
-│   ├── package.json     # Backend dependencies
-│   ├── .env             # Environment variables
-│   └── README.md        # Backend documentation
-│
-├── README.md            # This file
-└── IMPLEMENTATION_PLAN.md
+│   ├── server.js          # Express server
+│   ├── model.js           # ML model (brain.js)
+│   ├── data.json          # Training dataset (93 samples)
+│   ├── package.json       # Dependencies
+│   ├── .env               # Environment config
+│   ├── .gitignore        # Git ignore
+│   ├── requirements.txt   # Requirements list
+│   └── README.md          # Backend docs
+├── DOCUMENTATION.md        # Full documentation
+├── IMPLEMENTATION_PLAN.md  # Implementation details
+└── README.md              # This file
 ```
 
-## 🎯 How It Works
+---
 
-### ML Model Features
-The Brain.js neural network analyzes 8 key features:
+## How It Works
 
-1. **Exclamation Density** - Excessive ! marks indicate sensationalism
-2. **Capital Ratio** - ALL CAPS usage is common in fake news
-3. **Fake Keywords** - Detects words like "shocking", "secret", "conspiracy"
-4. **Clickbait Patterns** - Common manipulation tactics
-5. **Word Complexity** - Professional vs amateur writing
-6. **Sentence Structure** - Complex sentences suggest legitimacy
-7. **Text Length** - Very short headlines are often fake
-8. **Social Media Style** - URLs, hashtags, mentions
+### ML Model Features Analyzed:
 
-### Neural Network Architecture
+1. **Exclamation Density** - Ratio of ! marks to words
+2. **Capital Letter Ratio** - Percentage of uppercase letters
+3. **Fake Keyword Density** - Count of sensational keywords
+4. **Clickbait Score** - Clickbait pattern detection
+5. **Word Length** - Average word length
+6. **Sentence Complexity** - Average words per sentence
+7. **Text Length** - Short headlines are more suspicious
+8. **Social Media Indicators** - URLs, hashtags, mentions
+
+### Scoring System:
+
+- **> 45%** = FAKE NEWS (Red badge)
+- **≤ 45%** = REAL NEWS (Green badge)
+
+---
+
+## Sample Test Texts
+
+### Fake News (Should show FAKE):
+
 ```
-Input Layer:  8 features
-Hidden Layer: 16 neurons
-Hidden Layer: 12 neurons
-Hidden Layer: 8 neurons
-Output Layer: 1 (0=fake, 1=real)
-```
-
-## 🔌 API Documentation
-
-### Authentication
-```bash
-# Register
-POST /api/auth/register
-Body: { name, email, password }
-
-# Login
-POST /api/auth/login
-Body: { email, password }
-
-# Get Profile (Auth required)
-GET /api/auth/me
-Headers: Authorization: Bearer <token>
+BREAKING: Secret cure discovered that big pharma doesn't want you to know!
+Scientists prove coffee cures all diseases - you WON'T believe this MIRACLE!
+URGENT: What they don't want you to know about health!
 ```
 
-### Predictions
-```bash
-# Analyze News (Auth required)
-POST /api/predict
-Headers: Authorization: Bearer <token>
-Body: { text: "news article text..." }
+### Real News (Should show REAL):
 
-# Get History (Auth required)
-GET /api/history
-Headers: Authorization: Bearer <token>
-
-# Get Statistics (Auth required)
-GET /api/stats
-Headers: Authorization: Bearer <token>
+```
+The Federal Reserve announced interest rates will remain unchanged through Q1.
+Scientists published a peer-reviewed study on climate change in Nature journal.
+NASA released new images from the Mars rover exploring the Jezero crater.
 ```
 
-### Public Endpoints
-```bash
-# Health Check
-GET /api/health
+---
 
-# Demo (No auth)
-POST /api/demo
-Body: { text: "news text..." }
-```
+## API Endpoints
 
-## 📊 Example Response
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| POST | `/api/auth/register` | No | Register new user |
+| POST | `/api/auth/login` | No | Login user |
+| GET | `/api/auth/me` | Yes | Get user profile |
+| POST | `/api/predict` | Yes | Analyze news text |
+| GET | `/api/history` | Yes | Get prediction history |
+| GET | `/api/stats` | Yes | Get user statistics |
+| POST | `/api/demo` | No | Demo prediction (no auth) |
+| GET | `/api/health` | No | Health check |
 
-```json
-{
-  "success": true,
-  "isFake": true,
-  "confidence": 87,
-  "credibilityScore": 13,
-  "analysis": [
-    "Excessive exclamation marks detected",
-    "High use of capital letters",
-    "Sensational keywords found (3)"
-  ]
-}
-```
+---
 
-## 🎨 Screenshots
+## Configuration
 
-### Landing Page
-- Hero section with animated background
-- Feature showcase cards
-- Interactive demo section
-- Login/Register modals
-- About section
-
-### Dashboard
-- Sidebar navigation
-- News analyzer input
-- Real-time results display
-- Analysis history table
-- User statistics
-
-## 🔧 Configuration
-
-### Environment Variables
 Create `backend/.env` file:
 
 ```env
 PORT=3000
 MONGODB_URI=mongodb://localhost:27017/fakeguard
 JWT_SECRET=your-secret-key-here
-NODE_ENV=development
 ```
-
-### MongoDB Atlas Setup
-1. Create account at mongodb.com
-2. Create new cluster
-3. Get connection string
-4. Update `MONGODB_URI` in .env
-
-## 🚢 Deployment
-
-### Render (Recommended)
-1. Create new Web Service
-2. Connect GitHub repo
-3. Set build: `npm install`
-4. Set start: `npm start`
-5. Add environment variables
-
-### Railway
-1. New Project → Deploy from GitHub
-2. Add MongoDB database
-3. Configure environment variables
-
-### Heroku
-1. Create new app
-2. Connect MongoDB Atlas
-3. Deploy via GitHub
-
-## 🧪 Testing
-
-### Test ML Model
-```bash
-cd backend
-node model.js
-```
-
-### Test API
-```bash
-# Health check
-curl http://localhost:3000/api/health
-
-# Demo prediction
-curl -X POST http://localhost:3000/api/demo \
-  -H "Content-Type: application/json" \
-  -d '{"text":"Scientists prove coffee cures cancer!"}'
-```
-
-## 📈 Scaling Recommendations
-
-### Short-term
-- [ ] Increase dataset to 10,000+ samples
-- [ ] Add sentiment analysis
-- [ ] Implement text preprocessing (stemming)
-- [ ] Add named entity recognition
-- [ ] Use cross-validation
-
-### Long-term
-- [ ] TensorFlow.js for better performance
-- [ ] Separate ML microservice
-- [ ] Redis for caching
-- [ ] Real-time news API integration
-- [ ] Browser extension
-- [ ] Mobile app
-
-## 🐛 Troubleshooting
-
-### MongoDB Connection Error
-- Ensure MongoDB is running
-- Check connection string
-- Whitelist IP (for Atlas)
-
-### CORS Errors
-- Check frontend URL
-- Update CORS configuration
-
-### ML Model Not Loading
-- Verify data.json exists
-- Run `node model.js` to debug
-
-## 📄 License
-
-MIT License - feel free to use and modify.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch
-3. Make changes
-4. Submit pull request
 
 ---
 
-Built with ❤️ for fighting misinformation
+## Tech Stack
 
-**Stack:** Node.js • Express • MongoDB • Brain.js • Bootstrap 5
+| Technology | Purpose |
+|------------|---------|
+| Node.js | Backend runtime |
+| Express.js | Web framework |
+| brain.js | Neural network ML |
+| MongoDB | Database |
+| JWT | Authentication |
+| bcryptjs | Password hashing |
+| Bootstrap 5 | UI framework |
+
+---
+
+## Documentation
+
+For detailed documentation, see [DOCUMENTATION.md](./DOCUMENTATION.md)
+
+---
+
+## License
+
+MIT License - Feel free to use and modify!
+
+---
+
+## Author
+
+**Dinesh Kumar**
+
+---
+
+**Built with ❤️ to fight fake news**
