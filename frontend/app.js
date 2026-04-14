@@ -2,8 +2,9 @@
 // FakeGuard - Frontend Application
 // ========================================
 
-// API Base URL - Update this to your backend URL
-const API_URL = 'https://fake-email-detection.vercel.app/api' || 'http://localhost:3000/api';
+// API Base URL - Production (vercel deployed)
+const API_URL = 'https://fake-email-detection.vercel.app/api';
+const LOCAL_API_URL = 'http://localhost:3000/api';
 
 // Store tokens
 let authToken = localStorage.getItem('authToken');

@@ -452,5 +452,38 @@ const server = app.listen(PORT, () => {
   console.log("");
 });
 
+// For local development
+if (process.env.VERCEL !== '1') {
+  server.listen(PORT, () => {
+    console.log(`✅ Server running at http://localhost:${PORT}`);
+    console.log("");
+    console.log("╔════════════════════════════════════════════╗");
+    console.log("║     🚀 FakeGuard Server Ready!           ║");
+    console.log("╚════════════════════════════════════════════╝");
+    console.log("");
+    console.log("╔════════════════════════════════════════════╗");
+    console.log("║  🌐 Endpoints:                          ║");
+    console.log("║  📄 Landing:  http://localhost:3000     ║");
+    console.log("║  📊 Dashboard: http://localhost:3000/dashboard ║");
+    console.log("║  🧪 Test:      http://localhost:3000/test       ║");
+    console.log("║  ❤️  Health:    http://localhost:3000/api/health  ║");
+    console.log("╚════════════════════════════════════════════╝");
+    console.log("");
+    console.log("╔════════════════════════════════════════════╗");
+    console.log(
+      "║  🧠 ML Model: " +
+        (mlModel ? "Loaded ✓" : "Fallback Mode") +
+        "                  ║",
+    );
+    console.log(
+      "║  💾 Database: " +
+        (mongoose.connection.readyState === 1 ? "Connected ✓" : "Demo Mode") +
+        "            ║",
+    );
+    console.log("╚════════════════════════════════════════════╝");
+    console.log("");
+  });
+}
+
 // Vercel serverless export
 module.exports = server;

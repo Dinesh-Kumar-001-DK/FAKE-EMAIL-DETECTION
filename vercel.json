@@ -6,25 +6,26 @@
       "use": "@vercel/node"
     }
   ],
-  "env": {
-    "NODE_ENV": "production"
-  },
   "routes": [
     {
+      "src": "/",
+      "dest": "/backend/server.js"
+    },
+    {
       "src": "/api/(.*)",
-      "dest": "backend/server.js"
+      "dest": "/backend/server.js"
     },
     {
       "src": "/dashboard",
-      "dest": "frontend/dashboard.html"
+      "dest": "/backend/server.js"
     },
     {
       "src": "/test",
-      "dest": "frontend/test.html"
+      "dest": "/backend/server.js"
     },
     {
       "src": "/(.*)",
-      "dest": "frontend/index.html"
+      "dest": "/backend/server.js"
     }
   ]
 }
