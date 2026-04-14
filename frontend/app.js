@@ -3,7 +3,7 @@
 // ========================================
 
 // API Base URL - Update this to your backend URL
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://your-api.vercel.app/api' || 'http://localhost:3000/api';
 
 // Store tokens
 let authToken = localStorage.getItem('authToken');
